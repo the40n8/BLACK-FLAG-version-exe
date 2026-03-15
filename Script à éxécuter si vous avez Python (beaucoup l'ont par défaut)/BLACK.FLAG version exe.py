@@ -113,8 +113,8 @@ APP_VERSION = "1.1"
 # URL du fichier source sur GitHub pour vérification de version
 _UPDATE_URL = (
     "https://raw.githubusercontent.com/theolddispatch/"
-    "BLACK-FLAG-version-exe/main/Script%20%C3%A0%20"
-    "%C3%A9x%C3%A9cuter%20si%20vous%20avez%20Python%20"
+    "BLACK-FLAG-version-exe/refs/heads/main/"
+    "Script%20%C3%A0%20%C3%A9x%C3%A9cuter%20si%20vous%20avez%20Python%20"
     "(beaucoup%20l'ont%20par%20d%C3%A9faut)/BLACK.FLAG%20version%20exe.py"
 )
 _UPDATE_PAGE = (
@@ -135,12 +135,13 @@ def _check_update_available() -> bool:
                          headers={"User-Agent": "BLACK-FLAG-updater/1.1"})
         if r.status_code != 200:
             return False
-        for line in r.text.splitlines()[:20]:
-            if "APP_VERSION" in line and "=" in line:
-                remote = line.split("=")[1].strip().strip("\"'")
-                # Comparaison sémantique simple : tuple de floats
+        # Scan les 150 premières lignes (APP_VERSION est ligne ~111)
+        for line in r.text.splitlines()[:150]:
+            stripped = line.strip()
+            if stripped.startswith("APP_VERSION") and "=" in stripped:
+                remote = stripped.split("=")[1].strip().strip("\"'")
                 def _v(s):
-                    try: return tuple(int(x) for x in s.split("."))
+                    try: return tuple(int(x) for x in s.strip().split("."))
                     except: return (0,)
                 return _v(remote) > _v(APP_VERSION)
     except Exception:
