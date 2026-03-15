@@ -3,6 +3,7 @@
 
 **Outil d'upload automatique vers [La Cale](https://la-cale.space)**  
 *Développé par Theolddispatch & The40n8*
+Pour les mises à jour, vous avez juste à remplacer le fichier PY, vous ne perdrez pas vos configurations 🦜
 
 ---
 
